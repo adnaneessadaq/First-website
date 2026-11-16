@@ -8,14 +8,17 @@
 
   <style>
     body {
-      background-color: #450a0a; /* Hamra khla (Dark Burgundy) */
+      /* Gradation mn l-foq b l-hmr l-taht b l-khal */
+      background: linear-gradient(135deg, #7f1d1d, #000000);
       color: white;
       font-family: Arial, sans-serif;
       text-align: center;
       padding-top: 60px;
+      min-height: 100vh;
+      margin: 0;
     }
     h1 {
-      color: #f87171;
+      color: #fca5a5;
       margin-bottom: 10px;
     }
     p {
@@ -24,7 +27,7 @@
     }
     .social-section {
       margin-top: 40px;
-      border-top: 1px solid #7f1d1d;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding-top: 30px;
     }
     .social-btn {
@@ -39,6 +42,7 @@
       display: inline-block;
       margin: 5px;
       font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
     .social-btn:hover {
       background-color: #b91c1c;
