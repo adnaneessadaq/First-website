@@ -1,82 +1,752 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Welcome to My Official First Web</title>
-  <meta name="description" content="Official website of Adnane Essadaq">
-  <meta name="google-site-verification" content="4LYX8ZHWDo-xIPFogPTmgi7La89zdwrZYvndyGvNZPQ" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevSpace - Adnane Essadaq</title>
   <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #b91c1c, #1e3a8a);
+      --card-bg: rgba(255, 255, 255, 0.12);
+      --text-color: #ffffff;
+      --subtext-color: #cbd5e1;
+      --border-color: rgba(255, 255, 255, 0.25);
+      --nav-bg: rgba(0, 0, 0, 0.35);
+      --dropdown-bg: #0f172a;
+    }
+
+    body.dark-mode {
+      --bg-gradient: linear-gradient(135deg, #090d16, #111827);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-color: #f8fafc;
+      --subtext-color: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --nav-bg: rgba(0, 0, 0, 0.6);
+      --dropdown-bg: #020617;
+    }
+
+    body.light-mode {
+      --bg-gradient: linear-gradient(135deg, #e0f2fe, #bae6fd);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --text-color: #0f172a;
+      --subtext-color: #475569;
+      --border-color: rgba(15, 23, 42, 0.15);
+      --nav-bg: rgba(255, 255, 255, 0.75);
+      --dropdown-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: linear-gradient(135deg, #b91c1c, #1e3a8a);
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: background 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    /* Custom Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background-color: rgba(15, 23, 42, 0.92);
+      color: #ffffff;
+      border: 1px solid #3b82f6;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: bold;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.2s forwards;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-15px); } }
+
+    /* Navbar */
+    .navbar {
+      width: 100%;
+      padding: 12px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--nav-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .dots-btn {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      font-size: 20px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .dots-btn:hover { transform: scale(1.08); }
+    .brand-wrapper { display: flex; flex-direction: column; }
+    .nav-brand { font-weight: 800; font-size: 19px; letter-spacing: 0.5px; }
+
+    /* Live Green Status */
+    .live-status {
+      font-size: 11px;
+      color: var(--subtext-color);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .green-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 8px #22c55e;
+      animation: pulseDot 1.5s infinite;
+    }
+
+    @keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } }
+
+    .nav-btn {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    /* Dropdowns */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 48px;
+      background-color: var(--dropdown-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      min-width: 195px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      flex-direction: column;
+      z-index: 2000;
+      overflow: hidden;
+    }
+
+    .dropdown-menu.show { display: flex; }
+    .dropdown-left { left: 0; }
+    .dropdown-right { right: 0; }
+
+    .dropdown-item {
+      padding: 12px 16px;
+      color: var(--text-color);
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background-color: rgba(128, 128, 128, 0.2); }
+
+    /* Main Card */
+    .main-container {
+      flex: 1;
+      display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
       padding: 20px;
     }
-    h1 {
-      font-size: 28px;
-      color: #fca5a5;
-      margin-bottom: 15px;
+
+    .app-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 26px;
+      padding: 35px 25px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
     }
-    p {
-      font-size: 16px;
-      color: #e0f2fe;
-      line-height: 1.5;
-      margin-bottom: 20px;
+
+    .avatar-box {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 16px auto;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      border: 4px solid var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      overflow: hidden;
     }
-    .troll-img {
-      width: 180px;
-      height: auto;
-      border-radius: 12px;
-      border: 3px solid white;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+
+    .avatar-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-    .social-links {
-      margin-top: 10px;
+
+    .typing-title { font-size: 24px; font-weight: bold; min-height: 34px; margin-bottom: 5px; }
+    .cursor { display: inline-block; width: 3px; background-color: var(--text-color); animation: blink 0.7s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .subtitle { font-size: 11px; color: var(--subtext-color); margin-bottom: 20px; letter-spacing: 1.5px; font-weight: bold; }
+
+    .roles-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .role-badge {
+      background-color: rgba(128, 128, 128, 0.15);
+      border: 1px solid var(--border-color);
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .social-btn {
-      background-color: rgba(255, 255, 255, 0.2);
+
+    /* Music Player */
+    .music-player {
+      background-color: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .music-info { text-align: left; }
+    .music-title { font-size: 13px; font-weight: bold; }
+    .music-artist { font-size: 11px; color: var(--subtext-color); }
+
+    .play-btn {
+      background-color: #3b82f6;
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      padding: 10px 20px;
-      border-radius: 8px;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       cursor: pointer;
       font-size: 15px;
-      text-decoration: none;
-      display: inline-block;
-      margin: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 4000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background-color: #0f172a;
+      color: white;
+      border: 1px solid #3b82f6;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
       font-weight: bold;
-      transition: background 0.3s;
+      font-size: 17px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
     }
-    .social-btn:hover {
-      background-color: rgba(255, 255, 255, 0.4);
+
+    .close-modal { cursor: pointer; color: #94a3b8; font-size: 18px; }
+
+    .help-list { text-align: left; font-size: 13px; line-height: 1.6; color: #cbd5e1; display: flex; flex-direction: column; gap: 10px; }
+    .help-item { background: rgba(255,255,255,0.06); padding: 10px; border-radius: 10px; }
+
+    /* Difficulty Buttons */
+    .diff-selector { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
+    .diff-btn {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #3b82f6;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
     }
+    .diff-btn.active { background: #2563eb; color: white; }
+
+    /* Tic-Tac-Toe Board */
+    .ttt-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px auto; max-width: 240px; }
+    .ttt-cell {
+      height: 70px;
+      background-color: #1e293b;
+      border: 1px solid #3b82f6;
+      border-radius: 12px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .ttt-cell:hover { background-color: #334155; }
+
+    .reset-game-btn {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Robot Bot */
+    .bot-launcher {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background-color: #2563eb;
+      border: 3px solid white;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      transition: transform 0.3s;
+    }
+
+    .chat-window {
+      display: none;
+      position: fixed;
+      bottom: 92px;
+      right: 22px;
+      width: 310px;
+      max-width: 90vw;
+      background-color: #0f172a;
+      color: white;
+      border: 1px solid #3b82f6;
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 3000;
+    }
+
+    .chat-window.open { display: flex; }
+    .chat-header { background-color: #2563eb; padding: 12px 16px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .chat-body { padding: 14px; height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+    .msg { padding: 9px 13px; border-radius: 12px; max-width: 82%; line-height: 1.4; }
+    .msg.bot { background-color: #1e293b; align-self: flex-start; }
+    .msg.user { background-color: #2563eb; align-self: flex-end; }
+    .chat-input-area { display: flex; border-top: 1px solid #1e293b; background-color: #1e293b; padding: 8px; }
+    .chat-input { flex: 1; background: transparent; border: none; color: white; padding: 6px 10px; font-size: 13px; outline: none; }
+    .chat-send { background-color: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; }
   </style>
 </head>
 <body>
 
-  <h1>Welcome to My Official First Web</h1>
-  
-  <!-- Tswira l-jdida -->
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRn4D3k-zdrJkm9Hb42R84HSdcUuzJLNIoXIu5cUP2Xa7mQLgKT0yZzXIHQf8&s" alt="Trollface" class="troll-img">
+  <div class="toast-container" id="toastContainer"></div>
 
-  <p>If you want to DM me there is my accounts:</p>
-  
-  <div class="social-links">
-    <!-- Lien TikTok -->
-    <a href="https://www.tiktok.com/@3dnane008" target="_blank" class="social-btn">TikTok: @3dnane008</a>
-    
-    <!-- Lien Instagram -->
-    <a href="https://www.instagram.com/3dvn_008" target="_blank" class="social-btn">Instagram: @3dvn_008</a>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <button class="dots-btn" onclick="toggleMenu('dotsMenu')" title="Menu">⋮</button>
+      <div class="brand-wrapper">
+        <div class="nav-brand">DevSpace</div>
+        <div class="live-status">
+          <span class="green-dot"></span>
+          <span id="statusText">Online</span>
+        </div>
+      </div>
+
+      <div id="dotsMenu" class="dropdown-menu dropdown-left">
+        <button class="dropdown-item" onclick="setTheme('dark')">🌙 Dark Mode</button>
+        <button class="dropdown-item" onclick="setTheme('light')">☀️ Light Mode</button>
+        <button class="dropdown-item" onclick="setTheme('default')">🎨 Default Theme</button>
+        <button class="dropdown-item" onclick="openModal('gameModal')">🎮 Play X/O Game</button>
+        <button class="dropdown-item" onclick="openModal('helpModal')">❓ Help & Guide</button>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <a href="#" class="nav-btn" onclick="showToast('🏠 You are on Home')">Home</a>
+      <button class="nav-btn" onclick="toggleMenu('contactMenu')">Contact ▾</button>
+
+      <div id="contactMenu" class="dropdown-menu dropdown-right">
+        <a href="https://www.tiktok.com/@3dnane008" target="_blank" class="dropdown-item">🎵 TikTok</a>
+        <a href="https://www.instagram.com/3dvn_008" target="_blank" class="dropdown-item">📸 Instagram</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Card -->
+  <main class="main-container">
+    <div class="app-card">
+      <!-- Bdl "avatar.jpg" b smiat tswira li rfa3ti f GitHub -->
+      <div class="avatar-box">
+        <img src="avatar.jpg" alt="Adnane" onerror="this.style.display='none'; this.parentElement.innerHTML='👨‍💻';">
+      </div>
+      
+      <div class="typing-title">
+        <span id="typedText"></span><span class="cursor">|</span>
+      </div>
+      <p class="subtitle">OFFICIAL WEB APPLICATION</p>
+      
+      <div class="roles-container">
+        <div class="role-badge">🚀 Creator: Adnane Essadaq</div>
+        <div class="role-badge">🎓 Student & Tech Lover</div>
+      </div>
+
+      <!-- Music Player m-rbot مباشرة m3a smiat l-fichier dyalk -->
+      <div class="music-player">
+        <div class="music-info">
+          <div class="music-title">🎵 Beat It</div>
+          <div class="music-artist">Michael Jackson</div>
+        </div>
+        <button class="play-btn" id="playBtn" onclick="toggleMusic()">▶</button>
+        <audio id="bgMusic" src="Michael Jackson - Beat It (Official 4K Video).mp3" loop></audio>
+      </div>
+    </div>
+  </main>
+
+  <!-- Help Modal -->
+  <div class="modal-overlay" id="helpModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>❓ Help & App Guide</span>
+        <span class="close-modal" onclick="closeModal('helpModal')">✖</span>
+      </div>
+      <div class="help-list">
+        <div class="help-item"><b>👤 Creator:</b> S-site msawb b id dyal <b>Adnane Essadaq</b>!</div>
+        <div class="help-item"><b>🎨 Themes:</b> Baddl bin Dark Mode w Light Mode mn l-menu (⋮).</div>
+        <div class="help-item"><b>🎵 Music Player:</b> Tki 3la ▶ bach t-sm3 Beat It, w chof l-status l-khdr kay-t-baddl!</div>
+        <div class="help-item"><b>🎮 Mini-Game:</b> L3ab X/O (Easy, Normal, Hard) mn l-menu (⋮).</div>
+        <div class="help-item"><b>🤖 Robot Assistant:</b> Tki 3la l-robot zrq l-taht 3la l-imin.</div>
+      </div>
+    </div>
   </div>
 
+  <!-- Mini-Game Modal with Levels -->
+  <div class="modal-overlay" id="gameModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>🎮 X / O vs Robot</span>
+        <span class="close-modal" onclick="closeModal('gameModal')">✖</span>
+      </div>
+      <div class="diff-selector">
+        <button class="diff-btn active" id="btn-easy" onclick="setDifficulty('easy')">Easy</button>
+        <button class="diff-btn" id="btn-normal" onclick="setDifficulty('normal')">Normal</button>
+        <button class="diff-btn" id="btn-hard" onclick="setDifficulty('hard')">Hard</button>
+      </div>
+      <p id="gameStatus" style="font-size: 13px; color: #94a3b8;">Your turn (X)</p>
+      <div class="ttt-board" id="tttBoard"></div>
+      <button class="reset-game-btn" onclick="resetGame()">🔄 Restart Game</button>
+    </div>
+  </div>
+
+  <!-- Robot Bot -->
+  <button class="bot-launcher" onclick="toggleChat()" title="Website Assistant">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
+      <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H15A3,3 0 0,1 18,10V11H19A2,2 0 0,1 21,13V17A2,2 0 0,1 19,19H18V20A2,2 0 0,1 16,22H8A2,2 0 0,1 6,20V19H5A2,2 0 0,1 3,17V13A2,2 0 0,1 5,11H6V10A3,3 0 0,1 9,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A1.5,1.5 0 0,0 6,14.5A1.5,1.5 0 0,0 7.5,16A1.5,1.5 0 0,0 9,14.5A1.5,1.5 0 0,0 7.5,13M16.5,13A1.5,1.5 0 0,0 15,14.5A1.5,1.5 0 0,0 16.5,16A1.5,1.5 0 0,0 18,14.5A1.5,1.5 0 0,0 16.5,13M10,18V20H14V18H10Z"/>
+    </svg>
+  </button>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <span>🤖 DevSpace Robot</span>
+      <span style="cursor:pointer;" onclick="toggleChat()">✖</span>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="msg bot">Salam! Ana l-robot dyal Adnane. Swlni 3la s-site!</div>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" class="chat-input" placeholder="Kteb so2al hna..." onkeypress="if(event.key==='Enter') sendMsg()">
+      <button class="chat-send" onclick="sendMsg()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function showToast(message) {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    function toggleMenu(menuId) {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        if (menu.id !== menuId) menu.classList.remove('show');
+      });
+      document.getElementById(menuId).classList.toggle('show');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+      if (id === 'gameModal') resetGame();
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.nav-btn') && !event.target.matches('.dots-btn')) {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+      }
+      if (event.target.classList.contains('modal-overlay')) event.target.classList.remove('open');
+    }
+
+    function setTheme(mode) {
+      document.body.classList.remove('dark-mode', 'light-mode');
+      if (mode === 'dark') { document.body.classList.add('dark-mode'); showToast("🌙 Dark Mode Activated"); }
+      else if (mode === 'light') { document.body.classList.add('light-mode'); showToast("☀️ Light Mode Activated"); }
+      else { showToast("🎨 Default Theme Restored"); }
+    }
+
+    const phrases = ["Welcome", "Adnane App", "DevSpace", "Tech Lover"];
+    let phraseIndex = 0, letterIndex = 0, isDeleting = false;
+
+    function typeEffect() {
+      const currentPhrase = phrases[phraseIndex];
+      const typedElement = document.getElementById("typedText");
+      if (isDeleting) { typedElement.textContent = currentPhrase.substring(0, letterIndex - 1); letterIndex--; }
+      else { typedElement.textContent = currentPhrase.substring(0, letterIndex + 1); letterIndex++; }
+
+      let speed = isDeleting ? 60 : 110;
+      if (!isDeleting && letterIndex === currentPhrase.length) { speed = 1500; isDeleting = true; }
+      else if (isDeleting && letterIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; speed = 400; }
+      setTimeout(typeEffect, speed);
+    }
+    typeEffect();
+
+    function toggleMusic() {
+      const audio = document.getElementById("bgMusic");
+      const btn = document.getElementById("playBtn");
+      const statusText = document.getElementById("statusText");
+
+      if (audio.paused) {
+        audio.play().then(() => {
+          btn.textContent = "⏸";
+          statusText.textContent = "🎧 Listening to Beat It";
+          showToast("🎵 Playing: Beat It - Michael Jackson");
+        }).catch(() => {
+          showToast("⚠️ Rfa3 l-fichier MP3 f GitHub!");
+        });
+      } else {
+        audio.pause();
+        btn.textContent = "▶";
+        statusText.textContent = "Online";
+        showToast("⏸ Music Paused");
+      }
+    }
+
+    /* Tic-Tac-Toe with Easy / Normal / Hard */
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let gameActive = true;
+    let difficulty = "easy";
+    const winCombos = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+    function setDifficulty(level) {
+      difficulty = level;
+      document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-' + level).classList.add('active');
+      resetGame();
+      showToast("🎮 Level: " + level.toUpperCase());
+    }
+
+    function renderBoard() {
+      const boardEl = document.getElementById("tttBoard");
+      boardEl.innerHTML = "";
+      board.forEach((cell, idx) => {
+        const div = document.createElement("div");
+        div.className = "ttt-cell";
+        div.textContent = cell;
+        div.onclick = () => makeMove(idx);
+        boardEl.appendChild(div);
+      });
+    }
+
+    function makeMove(idx) {
+      if (board[idx] !== "" || !gameActive) return;
+      board[idx] = "X";
+      renderBoard();
+      if (checkWinner(board, "X")) {
+        document.getElementById("gameStatus").textContent = "🎉 You Win!";
+        showToast("🏆 Nta rb7ti l-Robot!");
+        gameActive = false;
+        return;
+      }
+      if (!board.includes("")) { document.getElementById("gameStatus").textContent = "🤝 Draw!"; gameActive = false; return; }
+      document.getElementById("gameStatus").textContent = "Robot thinking...";
+      setTimeout(robotMove, 350);
+    }
+
+    function robotMove() {
+      if (!gameActive) return;
+      let choice;
+      let empty = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+
+      if (difficulty === "easy") {
+        choice = empty[Math.floor(Math.random() * empty.length)];
+      } else if (difficulty === "normal") {
+        choice = findBestImmediateMove("O") ?? findBestImmediateMove("X") ?? empty[Math.floor(Math.random() * empty.length)];
+      } else {
+        choice = minimax(board, "O").index;
+      }
+
+      board[choice] = "O";
+      renderBoard();
+      if (checkWinner(board, "O")) {
+        document.getElementById("gameStatus").textContent = "🤖 Robot Wins!";
+        gameActive = false;
+        return;
+      }
+      if (!board.includes("")) { document.getElementById("gameStatus").textContent = "🤝 Draw!"; gameActive = false; return; }
+      document.getElementById("gameStatus").textContent = "Your turn (X)";
+    }
+
+    function findBestImmediateMove(player) {
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === "") {
+          board[i] = player;
+          let wins = checkWinner(board, player);
+          board[i] = "";
+          if (wins) return i;
+        }
+      }
+      return null;
+    }
+
+    function minimax(newBoard, player) {
+      let availSpots = newBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+      if (checkWinner(newBoard, "X")) return { score: -10 };
+      if (checkWinner(newBoard, "O")) return { score: 10 };
+      if (availSpots.length === 0) return { score: 0 };
+
+      let moves = [];
+      for (let i = 0; i < availSpots.length; i++) {
+        let move = {};
+        move.index = availSpots[i];
+        newBoard[availSpots[i]] = player;
+        move.score = (player === "O") ? minimax(newBoard, "X").score : minimax(newBoard, "O").score;
+        newBoard[availSpots[i]] = "";
+        moves.push(move);
+      }
+
+      let bestMove;
+      if (player === "O") {
+        let bestScore = -10000;
+        for (let i = 0; i < moves.length; i++) { if (moves[i].score > bestScore) { bestScore = moves[i].score; bestMove = i; } }
+      } else {
+        let bestScore = 10000;
+        for (let i = 0; i < moves.length; i++) { if (moves[i].score < bestScore) { bestScore = moves[i].score; bestMove = i; } }
+      }
+      return moves[bestMove];
+    }
+
+    function checkWinner(b, p) { return winCombos.some(c => c.every(i => b[i] === p)); }
+    function resetGame() { board = ["", "", "", "", "", "", "", "", ""]; gameActive = true; document.getElementById("gameStatus").textContent = "Your turn (X)"; renderBoard(); }
+
+    function toggleChat() { document.getElementById("chatWindow").classList.toggle("open"); }
+    function sendMsg() {
+      const input = document.getElementById("chatInput");
+      const text = input.value.trim();
+      if (!text) return;
+      addMessage(text, "user");
+      input.value = "";
+      setTimeout(() => addMessage(getSmartReply(text.toLowerCase()), "bot"), 350);
+    }
+    function addMessage(text, sender) {
+      const chatBody = document.getElementById("chatBody");
+      const div = document.createElement("div");
+      div.className = "msg " + sender;
+      div.innerHTML = text;
+      chatBody.appendChild(div);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+    function getSmartReply(q) {
+      if (q.includes("slm") || q.includes("salam") || q.includes("hi") || q.includes("hello")) return "Ahlan! Merhba bik f s-site dyal Adnane.";
+      if (q.includes("chkoun") || q.includes("mol") || q.includes("who") || q.includes("owner")) return "Mol had s-site huwwa <b>Adnane Essadaq</b>!";
+      if (q.includes("contact") || q.includes("tiktok") || q.includes("insta")) return "Tki 3la <b>Contact</b> l-foq 3la l-imin bach t-lqa TikTok w Instagram!";
+      if (q.includes("game") || q.includes("xo")) return "Sir l l-menu (⋮) w khtar <b>Play X/O Game</b> (Easy, Normal, wla Hard)!";
+      if (q.includes("music") || q.includes("beat")) return "Tki 3la ▶ f l-card bach t-khddm Beat It!";
+      return "Ana l-robot dyal Adnane! Swlni 3la s-site, l-game, wla Contact.";
+    }
+  </script>
 </body>
 </html>
