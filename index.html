@@ -370,52 +370,6 @@
       cursor: pointer;
       margin-top: 10px;
     }
-
-    /* Robot Bot */
-    .bot-launcher {
-      position: fixed;
-      bottom: 22px;
-      right: 22px;
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background-color: #2563eb;
-      border: 3px solid white;
-      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.6);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 3000;
-      transition: transform 0.3s;
-    }
-
-    .chat-window {
-      display: none;
-      position: fixed;
-      bottom: 92px;
-      right: 22px;
-      width: 310px;
-      max-width: 90vw;
-      background-color: #0f172a;
-      color: white;
-      border: 1px solid #3b82f6;
-      border-radius: 18px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 3000;
-    }
-
-    .chat-window.open { display: flex; }
-    .chat-header { background-color: #2563eb; padding: 12px 16px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-    .chat-body { padding: 14px; height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
-    .msg { padding: 9px 13px; border-radius: 12px; max-width: 82%; line-height: 1.4; }
-    .msg.bot { background-color: #1e293b; align-self: flex-start; }
-    .msg.user { background-color: #2563eb; align-self: flex-end; }
-    .chat-input-area { display: flex; border-top: 1px solid #1e293b; background-color: #1e293b; padding: 8px; }
-    .chat-input { flex: 1; background: transparent; border: none; color: white; padding: 6px 10px; font-size: 13px; outline: none; }
-    .chat-send { background-color: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -457,7 +411,6 @@
   <!-- Main Card -->
   <main class="main-container">
     <div class="app-card">
-      <!-- Exact matching filename for Leonardo image -->
       <div class="avatar-box">
         <img src="leonardo-dicaprio-cheers-meme-template-full-45246ac0.webp" alt="Adnane" onerror="this.style.display='none'; this.parentElement.innerHTML='👨‍💻';">
       </div>
@@ -496,7 +449,6 @@
         <div class="help-item"><b>🎨 Themes:</b> Baddl bin Dark Mode w Light Mode mn l-menu (⋮).</div>
         <div class="help-item"><b>🎵 Music Player:</b> Tki 3la ▶ bach t-sm3 Beat It, w chof l-status l-khdr kay-t-baddl!</div>
         <div class="help-item"><b>🎮 Mini-Game:</b> L3ab X/O (Easy, Normal, Hard) mn l-menu (⋮).</div>
-        <div class="help-item"><b>🤖 Robot Assistant:</b> Tki 3la l-robot zrq l-taht 3la l-imin.</div>
       </div>
     </div>
   </div>
@@ -516,27 +468,6 @@
       <p id="gameStatus" style="font-size: 13px; color: #94a3b8;">Your turn (X)</p>
       <div class="ttt-board" id="tttBoard"></div>
       <button class="reset-game-btn" onclick="resetGame()">🔄 Restart Game</button>
-    </div>
-  </div>
-
-  <!-- Robot Bot -->
-  <button class="bot-launcher" onclick="toggleChat()" title="Website Assistant">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
-      <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H15A3,3 0 0,1 18,10V11H19A2,2 0 0,1 21,13V17A2,2 0 0,1 19,19H18V20A2,2 0 0,1 16,22H8A2,2 0 0,1 6,20V19H5A2,2 0 0,1 3,17V13A2,2 0 0,1 5,11H6V10A3,3 0 0,1 9,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A1.5,1.5 0 0,0 6,14.5A1.5,1.5 0 0,0 7.5,16A1.5,1.5 0 0,0 9,14.5A1.5,1.5 0 0,0 7.5,13M16.5,13A1.5,1.5 0 0,0 15,14.5A1.5,1.5 0 0,0 16.5,16A1.5,1.5 0 0,0 18,14.5A1.5,1.5 0 0,0 16.5,13M10,18V20H14V18H10Z"/>
-    </svg>
-  </button>
-
-  <div class="chat-window" id="chatWindow">
-    <div class="chat-header">
-      <span>🤖 DevSpace Robot</span>
-      <span style="cursor:pointer;" onclick="toggleChat()">✖</span>
-    </div>
-    <div class="chat-body" id="chatBody">
-      <div class="msg bot">Salam! Ana l-robot dyal Adnane. Swlni 3la s-site!</div>
-    </div>
-    <div class="chat-input-area">
-      <input type="text" id="chatInput" class="chat-input" placeholder="Kteb so2al hna..." onkeypress="if(event.key==='Enter') sendMsg()">
-      <button class="chat-send" onclick="sendMsg()">Send</button>
     </div>
   </div>
 
@@ -721,211 +652,6 @@
 
     function checkWinner(b, p) { return winCombos.some(c => c.every(i => b[i] === p)); }
     function resetGame() { board = ["", "", "", "", "", "", "", "", ""]; gameActive = true; document.getElementById("gameStatus").textContent = "Your turn (X)"; renderBoard(); }
-
-    function toggleChat() { document.getElementById("chatWindow").classList.toggle("open"); }
-    function sendMsg() {
-      const input = document.getElementById("chatInput");
-      const text = input.value.trim();
-      if (!text) return;
-      addMessage(text, "user");
-      input.value = "";
-      setTimeout(() => addMessage(getSmartReply(text.toLowerCase()), "bot"), 350);
-    }
-    function addMessage(text, sender) {
-      const chatBody = document.getElementById("chatBody");
-      const div = document.createElement("div");
-      div.className = "msg " + sender;
-      div.innerHTML = text;
-      chatBody.appendChild(div);
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-    async function getSmartReply(q) {
-  try {
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AQ.Ab8RN6LRonIMwwurLIeqOKkwPt0KUWQEIJvHcxk2Z2ez3CqX1g", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: q }] }]
-      })
-    });
-    const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
-  } catch (error) {
-    return "عذراً، حدث خطأ في الاتصال.";
-  }
-}
-
-    }
   </script>
 </body>
-  <!-- Chatbot UI Styling -->
-<style>
-  #chat-widget {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    font-family: Arial, sans-serif;
-  }
-  #chat-toggle-btn {
-    background: #6366f1;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
-  #chat-container {
-    display: none;
-    width: 300px;
-    height: 400px;
-    background: #1e1e1e;
-    color: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-    flex-direction: column;
-    overflow: hidden;
-    margin-bottom: 10px;
-    border: 1px solid #333;
-  }
-  #chat-header {
-    background: #2d2d2d;
-    padding: 10px 15px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #444;
-  }
-  #chat-close {
-    background: none;
-    border: none;
-    color: #aaa;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  #chat-messages {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .message {
-    padding: 8px 12px;
-    border-radius: 8px;
-    max-width: 80%;
-    line-height: 1.4;
-  }
-  .user-msg {
-    background: #6366f1;
-    color: white;
-    align-self: flex-end;
-  }
-  .bot-msg {
-    background: #333;
-    color: #eee;
-    align-self: flex-start;
-  }
-  #chat-input-area {
-    display:كتب flex;
-    padding: 10px;
-    background: #2d2d2d;
-    border-top: 1px solid #444;
-  }
-  #chat-input {
-    flex: 1;
-    background: #1a1a1a;
-    border: 1px solid #444;
-    color: white;
-    padding: 8px;
-    border-radius: 6px;
-    outline: none;
-  }
-  #chat-send {
-    background: #6366f1;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    margin-left: 6px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-</style>
-
-<!-- Chatbot HTML Structure -->
-<div id="chat-widget">
-  <div id="chat-container">
-    <div id="chat-header">
-      <span>DevSpace AI</span>
-      <button id="chat-close" onclick="toggleChat()">✕</button>
-    </div>
-    <div id="chat-messages">
-      <div class="message bot-msg">Ahlan! Kif n-qddr n-mɛawnk l-youm? (Darija, Arabe, Français...)</div>
-    </div>
-    <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Ktib so2alak hna..." onkeypress="handleKeyPress(event)" />
-      <button id="chat-send" onclick="sendMessage()">Send</button>
-    </div>
-  </div>
-  <button id="chat-toggle-btn" onclick="toggleChat()">💬 Chat with AI</button>
-</div>
-
-<!-- Chatbot JavaScript Logic -->
-<script>
-  const API_KEY = "AQ.Ab8RN6IWmdGLJSxGAsECuKnzgJa8NiPf6C3RABGbeWwmcSKNoQ"; // Hna ḥott l-API Key dyalk li copiiti!
-
-  function toggleChat() {
-    const box = document.getElementById("chat-container");
-    box.style.display = box.style.display === "flex" ? "none" : "flex";
-  }
-
-  function handleKeyPress(e) {
-    if (e.key === "Enter") sendMessage();
-  }
-
-  async function sendMessage() {
-    const input = document.getElementById("chat-input");
-    const messages = document.getElementById("chat-messages");
-    const text = input.value.trim();
-    if (!text) return;
-
-    // Add user message
-    messages.innerHTML += `<div class="message user-msg">${text}</div>`;
-    input.value = "";
-    messages.scrollTop = messages.scrollHeight;
-
-    // Loading placeholder
-    const loadingId = "loading-" + Date.now();
-    messages.innerHTML += `<div id="${loadingId}" class="message bot-msg">Kay-fkkr... 🤖</div>`;
-    messages.scrollTop = messages.scrollHeight;
-
-    try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}
-`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: text }] }]
-        })
-      });
-
-      const data = await response.json();
-      const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Samḥ lia, ma-fhmts mzyan, 3awd so2al 3afak!";
-
-      // Remove loading and add bot response
-      document.getElementById(loadingId).remove();
-      messages.innerHTML += `<div class="message bot-msg">${botReply}</div>`;
-    } catch (err) {
-      document.getElementById(loadingId).remove();
-      messages.innerHTML += `<div class="message bot-msg">Waqea mochkil f l-connection, 3awd ḥawl marra okhra.</div>`;
-    }
-    messages.scrollTop = messages.scrollHeight;
-  }
-</script>
-
 </html>
